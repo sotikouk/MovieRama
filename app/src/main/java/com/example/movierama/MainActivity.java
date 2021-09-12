@@ -4,8 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,10 +32,15 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     // json link to the internet
-    private static String JSON_URL = "https://api.themoviedb.org/3/movie/popular?api_key=30842f7c80f80bb3ad8a2fb98195544d&language=en-US&page=1";
+    private static final String JSON_URL = "https://api.themoviedb.org/3/movie/popular?api_key=30842f7c80f80bb3ad8a2fb98195544d&language=en-US&page=1";
+    private static String JSON_SEARCH = "https://api.themoviedb.org/3/search/movie?api_key=30842f7c80f80bb3ad8a2fb98195544d&language=en-US&page=1&include_adult=false&query=";
+    private static final String JSON_TOP_RATED = "https://api.themoviedb.org/3/movie/top_rated?api_key=30842f7c80f80bb3ad8a2fb98195544d&language=en-US&page=1";
 
     List<MovieModelClass> movieList;
     RecyclerView recyclerview;
+
+    EditText movieName;
+    Button search, popular, topRated;
 
 
     @Override
@@ -38,11 +52,67 @@ public class MainActivity extends AppCompatActivity {
         recyclerview = findViewById(R.id.recyclerview);
 
         GetData getData = new GetData();
-        getData.execute();
+        getData.execute(JSON_URL);
+
+        search = findViewById(R.id.buttonSearch);
+        popular = findViewById(R.id.popularButton);
+        topRated = findViewById(R.id.topRatedButton);
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movieList.clear();
+                movieName = findViewById(R.id.searchMovie);
+                String movieN = movieName.getText().toString();
+                if(isConnected() && movieN != null){
+                    movieN.replaceAll(" ","+");
+                    String url = JSON_SEARCH+'"'+movieN+'"';
+                    new GetData().execute(url);
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Not Connected", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        popular.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movieList.clear();
+                if(isConnected()){
+                    new GetData().execute(JSON_URL);
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Not Connected", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        topRated.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movieList.clear();
+                if(isConnected()){
+                    new GetData().execute(JSON_TOP_RATED);
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Not Connected", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private boolean isConnected(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if(networkInfo == null || !networkInfo.isConnected() ||
+                (networkInfo.getType() != connectivityManager.TYPE_WIFI && networkInfo.getType() != connectivityManager.TYPE_MOBILE)){
+            return false;
+        }
+        return true;
     }
 
     public class GetData extends AsyncTask<String, String, String> {
-
 
         @Override
         protected String doInBackground(String... strings) {
@@ -50,11 +120,11 @@ public class MainActivity extends AppCompatActivity {
             String current = "";
 
             try {
-                URL url;
                 HttpURLConnection urlConnection = null;
 
                 try {
-                    url = new URL(JSON_URL);
+                    URL url;
+                    url = new URL(strings[0]);
                     urlConnection = (HttpURLConnection) url.openConnection();
 
                     InputStream is = urlConnection.getInputStream();
@@ -120,10 +190,11 @@ public class MainActivity extends AppCompatActivity {
 
             private void PutDataIntoRecyclerView (List<MovieModelClass> movieList) {
 
-            Adaptery adaptery = new Adaptery(this, movieList);
-            recyclerview.setLayoutManager(new LinearLayoutManager(this));
+                Adaptery adaptery = new Adaptery(this, movieList);
+                recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
-            recyclerview.setAdapter(adaptery);
+                recyclerview.setAdapter(adaptery);
+
             }
 
 }
