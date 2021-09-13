@@ -7,6 +7,7 @@ public class MovieModelClass {
     String img;
     String releaseD;
     String overview;
+    boolean favorite = false;
 
     public MovieModelClass(String id, String name, String img, String releaseD, String overview) {
         this.id = id;
@@ -14,9 +15,14 @@ public class MovieModelClass {
         this.img = img;
         this.releaseD = releaseD;
         this.overview = overview;
+        this.favorite = favorite;
     }
 
     public MovieModelClass() {
+    }
+
+    public boolean isFavorite() {
+        return favorite;
     }
 
     public String getOverview() {
@@ -39,6 +45,10 @@ public class MovieModelClass {
 
     public void setOverview(String overview) {
         this.overview = overview;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     public void setId(String id) {

@@ -18,6 +18,7 @@ public class movieDetails extends AppCompatActivity {
 
 
     String name, rate, overview, img, date;
+    boolean favorite;
 
 
     @Override
