@@ -2,35 +2,29 @@ package com.example.movierama;
 
 public class MovieModelClass {
 
-    String id;
+    String rating;
     String name;
     String img;
     String releaseD;
     String overview;
-    boolean favorite = false;
 
-    public MovieModelClass(String id, String name, String img, String releaseD, String overview) {
-        this.id = id;
+    public MovieModelClass(String rating, String name, String img, String releaseD, String overview, String averageVoting) {
+        this.rating = rating;
         this.name = name;
         this.img = img;
         this.releaseD = releaseD;
         this.overview = overview;
-        this.favorite = favorite;
     }
 
     public MovieModelClass() {
-    }
-
-    public boolean isFavorite() {
-        return favorite;
     }
 
     public String getOverview() {
         return overview;
     }
 
-    public String getId() {
-        return id;
+    public String getRating() {
+        return rating;
     }
 
     public String getName() {
@@ -47,12 +41,8 @@ public class MovieModelClass {
         this.overview = overview;
     }
 
-    public void setFavorite(boolean favorite) {
-        this.favorite = favorite;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 
     public void setName(String name) {
@@ -66,4 +56,5 @@ public class MovieModelClass {
     public void setReleaseD(String releaseD) {
         this.releaseD = releaseD;
     }
+
 }

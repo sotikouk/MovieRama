@@ -6,10 +6,9 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.bumptech.glide.Glide;
 
 public class movieDetails extends AppCompatActivity {
 
@@ -30,7 +29,7 @@ public class movieDetails extends AppCompatActivity {
         title = findViewById(R.id.movieTitle);
         rating = findViewById(R.id.movieRating);
         release = findViewById(R.id.movieRelease);
-        details = findViewById(R.id.overview);
+        details = findViewById(R.id.movieOverview);
 
         getData();
 
